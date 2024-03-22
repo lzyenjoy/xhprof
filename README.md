@@ -36,6 +36,6 @@ xhprof.output_dir=/tmp/xhprof
  - 在`track/index.php`中定义自己**XHPROF_ROOT**的位置和`XHprof`的域名
  - 将要测试网站的**index.php**文件改名为**index.php.bak**
  - 将`track/index.php`放到要测试的网站根目录
- - 如果header中没有自定义｀HTTP_XHPROF｀和`XHPROF_JUMP`这两个字段可以直接将`index.php`中的这两个参数改为`true`（可以使用chrome的ModHeader插件动态添加）
+ - 如果header中没有自定义｀HTTP_XHPROF｀和`HTTP_JUMP`这两个字段可以直接将`index.php`中的这两个参数改为`true`（可以使用chrome的ModHeader插件动态添加）
 原作者： [https://github.com/luo3555/xhprof.git](https://github.com/luo3555/xhprof.git)
 
