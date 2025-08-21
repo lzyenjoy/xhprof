@@ -41,27 +41,29 @@ xhprof.output_dir=/tmp/xhprof
 -  访问https://{{domain}}/public_html/ 可以查看所有的id
 
 
-
+---
 ### magento版本
 1. 安装 xhprof 扩展
 
+```shell
 sudo pecl install xhprof
-以及需要的依赖库
+## 以及需要的依赖库
 sudo apt install graphviz
-
+```
 2. 配置 php.ini
 
+```xml
 [xhprof]
 extension=xhprof.so;
-; 下面的路径代表生成记录的位置
+### 面的路径代表生成记录的位置
 xhprof.output_dir=/var/www/html/localhost.shinetechmagento.com/output
-
+```
 
 3. 在本地新建一个域名 localhost.shinetechmagento.com 可访问的，并放入如下目录
 
 [XHPROF](https://github.com/lzyenjoy/xhprof)
 
-4. 根据不同的php版本下载不同的xhprof.tagz 文件 (https://pecl.php.net/package/xhprof)，此链接是php8版本的
+4. 根据不同的php版本下载不同的xhprof.tagz 文件 (https://pecl.php.net/package/xhprof) ，此链接是php8版本的
 
 [xhprof 2.3.9](https://pecl.php.net/get/xhprof-2.3.9.tgz)
 
@@ -103,6 +105,4 @@ if (isset($_SERVER["HTTP_XHPROF"])) {
 }
 ```
 
-7. 浏览器运行一起就能够在 第二步中定义的路径里 html.xhprof 结尾的文件
-
-8. 直接访问 https://localhost.shinetechmagento.com/public_html 就能够拿到信息
+7. 直接访问 https://localhost.shinetechmagento.com/public_html 就能够拿到信息
