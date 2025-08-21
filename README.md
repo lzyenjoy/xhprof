@@ -40,3 +40,69 @@ xhprof.output_dir=/tmp/xhprof
 原作者： [https://github.com/luo3555/xhprof.git](https://github.com/luo3555/xhprof.git)
 -  访问https://{{domain}}/public_html/ 可以查看所有的id
 
+
+
+### magento版本
+1. 安装 xhprof 扩展
+
+sudo pecl install xhprof
+以及需要的依赖库
+sudo apt install graphviz
+
+2. 配置 php.ini
+
+[xhprof]
+extension=xhprof.so;
+; 下面的路径代表生成记录的位置
+xhprof.output_dir=/var/www/html/localhost.shinetechmagento.com/output
+
+
+3. 在本地新建一个域名 localhost.shinetechmagento.com 可访问的，并放入如下目录
+
+[XHPROF](https://github.com/lzyenjoy/xhprof)
+
+4. 根据不同的php版本下载不同的xhprof.tagz 文件 (https://pecl.php.net/package/xhprof)，此链接是php8版本的
+
+[xhprof 2.3.9](https://pecl.php.net/get/xhprof-2.3.9.tgz)
+
+5. 下载后解压复制里面的 xhprof_html 和 xhprof_lib 文件夹以覆盖上述第3步下载的文件夹 public_html、xhprof_lib
+
+6. 将下列文件放置在 magento的pub/index.php中，原来的index.php跟改为index.php.bak
+
+```php
+
+if (isset($_SERVER["HTTP_XHPROF"])) {
+
+    xhprof_enable(XHPROF_FLAGS_CPU+XHPROF_FLAGS_MEMORY);
+
+    include 'index.php.bak';
+
+    $data = xhprof_disable();
+
+    // Here need defind XHPROF_ROOT
+    $XHPROF_ROOT = '/var/www/html/localhost.shinetechmagento.com'; // 容器里面的目录（如果是docker）
+    $XHPROF_DOMAIN = 'https://localhost.shinetechmagento.com/public_html'; //可访问的域名
+    require_once $XHPROF_ROOT . "/xhprof_lib/utils/xhprof_lib.php";
+    require_once $XHPROF_ROOT . "/xhprof_lib/utils/xhprof_runs.php";
+
+    $tag = $_SERVER['REQUEST_URI'];
+    $replace = ['/', '?', '&', '.'];
+    foreach ($replace as $str) {
+        $tag = str_replace($str, '-', $tag);
+    }
+    $tag = date('Y-m-d_H_i_s', time()) . '----' . $tag;
+
+    $objXhprofRun = new XHProfRuns_Default();
+    $run_id = $objXhprofRun->save_run($data, $tag);
+    $url = $XHPROF_DOMAIN . '/index.php?source=' .$tag  . '&run=' . $run_id;
+    if (isset($_SERVER["XHPROF_JUMP"])) {
+        echo '<a target="_blank" href="' . $url . '">' . $run_id . '</a>';
+    }
+} else {
+    include 'index.php.bak';
+}
+```
+
+7. 浏览器运行一起就能够在 第二步中定义的路径里 html.xhprof 结尾的文件
+
+8. 直接访问 https://localhost.shinetechmagento.com/public_html 就能够拿到信息
