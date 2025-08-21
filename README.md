@@ -72,10 +72,11 @@ xhprof.output_dir=/var/www/html/localhost.shinetechmagento.com/output
 6. 将下列文件放置在 magento的pub/index.php中，原来的index.php跟改为index.php.bak
 
 ```php
+<?php
 
+// 请求的header需要定义为 XHROF 或者 JUMP 不用加HTTP
 if (isset($_SERVER["HTTP_XHPROF"])) {
-
-    xhprof_enable(XHPROF_FLAGS_CPU+XHPROF_FLAGS_MEMORY);
+    xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
 
     include 'index.php.bak';
 
@@ -96,8 +97,8 @@ if (isset($_SERVER["HTTP_XHPROF"])) {
 
     $objXhprofRun = new XHProfRuns_Default();
     $run_id = $objXhprofRun->save_run($data, $tag);
-    $url = $XHPROF_DOMAIN . '/index.php?source=' .$tag  . '&run=' . $run_id;
-    if (isset($_SERVER["XHPROF_JUMP"])) {
+    $url = $XHPROF_DOMAIN . '/index.php?source=' . $tag . '&run=' . $run_id;
+    if ($_SERVER["HTTP_JUMP"]) {
         echo '<a target="_blank" href="' . $url . '">' . $run_id . '</a>';
     }
 } else {
